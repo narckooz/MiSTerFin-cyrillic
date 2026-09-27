@@ -53,10 +53,8 @@ static const uint8_t *glyph_for_cp(unsigned cp)
     if (cp >= 0x0410 && cp <= 0x042F) return font8x8_cyr_upper[cp - 0x0410];
     if (cp >= 0x0430 && cp <= 0x044F) return font8x8_cyr_lower[cp - 0x0430];
 
-    static const uint8_t yo_upper[8] = {0x24,0x00,0x3C,0x04,0x3C,0x04,0x04,0x3C};
-    static const uint8_t yo_lower[8] = {0x18,0x00,0x1C,0x04,0x3C,0x04,0x04,0x3C};
-    if (cp == 0x0401) return yo_upper;
-    if (cp == 0x0451) return yo_lower;
+    if (cp == 0x0401) return font8x8_cyr_yo_upper;
+    if (cp == 0x0451) return font8x8_cyr_yo_lower;
 
     return font8x8_basic['?'];
 }
