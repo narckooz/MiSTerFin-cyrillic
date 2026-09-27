@@ -1,0 +1,44 @@
+name: Build MiSTerFin ARM
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build-arm:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Zig 0.14.1
+        run: |
+          curl -L --fail --retry 3 -o zig.tar.xz \
+            https://ziglang.org/download/0.14.1/zig-x86_64-linux-0.14.1.tar.xz
+          tar -xf zig.tar.xz
+          echo "$GITHUB_WORKSPACE/zig-x86_64-linux-0.14.1" >> "$GITHUB_PATH"
+
+      - name: Show toolchain version
+        run: |
+          zig version
+          make --version | head -n 1
+
+      - name: Build ARM binary
+        run: make arm
+
+      - name: Verify ARM binary
+        run: |
+          test -f misterfin-arm
+          file misterfin-arm
+          ls -lh misterfin-arm
+
+      - name: Upload misterfin-arm
+        uses: actions/upload-artifact@v4
+        with:
+          name: misterfin-arm
+          path: misterfin-arm
+          if-no-files-found: error
+          retention-days: 30
